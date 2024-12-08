@@ -1,0 +1,8 @@
+# Fichiers de Visual Studio
+.vs/
+*.user
+*.suo
+
+# Fichiers de build
+bin/
+obj/
