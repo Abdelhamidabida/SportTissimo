@@ -13,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var cnx = builder.Configuration.GetConnectionString("dbcon");
 builder.Services.AddDbContext<Context>(options => options.UseSqlServer(cnx));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IClientRepo, ClientRepo>();
 var app = builder.Build();

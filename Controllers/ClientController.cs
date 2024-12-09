@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SportissimoProject.DTO;
 using SportissimoProject.Models;
 using SportissimoProject.Repository;
 
@@ -59,16 +61,32 @@ namespace SportissimoProject.Controllers
         }
 
         // Mettre à jour un client
-        [HttpPut]
-        public async Task<IActionResult> Edit(Client client)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Edit(string id, [FromBody] UpdateClientDto updateDto)
         {
-            var existingClient = await repository.Get(client.Id);
-            if (existingClient == null)
-                return NotFound("Client inexistant");
+            if (updateDto == null)
+            {
+                return BadRequest("Données invalides.");
+            }
 
-            await repository.Update(client);
-            return Ok(client);
+            var existingClient = await repository.Get(id);
+            if (existingClient == null)
+            {
+                return NotFound("Client inexistant.");
+            }
+
+            // Met à jour uniquement les champs fournis
+            if (!string.IsNullOrEmpty(updateDto.Nom)) existingClient.Nom = updateDto.Nom;
+            if (!string.IsNullOrEmpty(updateDto.Prenom)) existingClient.Prenom = updateDto.Prenom;
+            if (!string.IsNullOrEmpty(updateDto.Email)) existingClient.Email = updateDto.Email;
+            if (!string.IsNullOrEmpty(updateDto.MotDePasse)) existingClient.MotDePasse = updateDto.MotDePasse;
+            if (updateDto.NbReservation.HasValue) existingClient.NbReservation = updateDto.NbReservation.Value;
+
+            await repository.Update(existingClient);
+            return Ok(existingClient);
         }
+
+
 
         // Supprimer un client
         [HttpDelete("{id}")]
