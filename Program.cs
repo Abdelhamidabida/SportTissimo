@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SportissimoProject.Models;
+using SportissimoProject.Repositories.Interfaces;
+using SportissimoProject.Repositories;
 using SportissimoProject.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,7 @@ builder.Services.AddSwaggerGen();
 var cnx = builder.Configuration.GetConnectionString("dbcon");
 builder.Services.AddDbContext<Context>(options => options.UseSqlServer(cnx));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<ITerrainRepository, TerrainRepository>();
 
 builder.Services.AddScoped<IClientRepo, ClientRepo>();
 var app = builder.Build();

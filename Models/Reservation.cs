@@ -1,24 +1,19 @@
-﻿namespace SportissimoProject.Models
+﻿using SportissimoProject.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+
+public class Reservation
 {
-    public class Reservation
-    {
-        public string Id { get; set; } // Identifiant unique de la réservation
+    public string Id { get; set; } // Identifiant unique de la réservation
 
-        // Clé étrangère pour le client
-        public string ClientId { get; set; }
-        // Référence au client qui a fait la réservation
-        public Client Client { get; set; }
+    [ForeignKey("ClientId")] // Assurer la relation avec Client
+    public string ClientId { get; set; }
+    public Client Client { get; set; }
 
-        // Clé étrangère pour le terrain réservé
-        public string TerrainId { get; set; }
-        // Référence au terrain réservé
-        public Terrain Terrain { get; set; }
+    [ForeignKey("TerrainId")] // Assurer la relation avec Terrain
+    public string TerrainId { get; set; }
+    public Terrain Terrain { get; set; }
 
-        // Date de la réservation
-        public DateTime DateReservation { get; set; }
-        // Date de début de la réservation
-        public DateTime DateDebut { get; set; }
-        // Date de fin de la réservation
-        public DateTime DateFin { get; set; }
-    }
+    public DateTime DateReservation { get; set; }
+    public DateTime DateDebut { get; set; }
+    public DateTime DateFin { get; set; }
 }

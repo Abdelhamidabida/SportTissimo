@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SportissimoProject.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -204,11 +204,12 @@ namespace SportissimoProject.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Nom = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Prenom = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MotDePasse = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     NbReservation = table.Column<int>(type: "int", nullable: false),
-                    CoachId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    AdminId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    AdminId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CoachId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {

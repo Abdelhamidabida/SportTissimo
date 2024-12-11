@@ -1,8 +1,13 @@
-﻿namespace SportissimoProject.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace SportissimoProject.Models
 {
     public class Terrain
     {
-        public string Id { get; set; } // Identifiant unique du terrain
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         public string Nom { get; set; } // Nom du terrain (par exemple "Terrain 1", "Terrain 2")
 
@@ -12,7 +17,6 @@
 
         public Boolean Disponibilite { get; set; } // Disponibilité du terrain (ex : "Libre", "Occupé", etc.)
 
-        // Relation avec les réservations
-        public List<Reservation> Reservations { get; set; } // Liste des réservations associées à ce terrain
+         // Liste des réservations associées à ce terrain
     }
 }

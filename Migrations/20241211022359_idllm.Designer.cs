@@ -12,8 +12,8 @@ using SportissimoProject.Models;
 namespace SportissimoProject.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241209215632_AjoutPrenom")]
-    partial class AjoutPrenom
+    [Migration("20241211022359_idllm")]
+    partial class idllm
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -175,6 +175,42 @@ namespace SportissimoProject.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Reservation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdminId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateDebut")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateFin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateReservation")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TerrainId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("TerrainId");
+
+                    b.ToTable("Reservations");
+                });
+
             modelBuilder.Entity("SportissimoProject.Models.Abonnement", b =>
                 {
                     b.Property<string>("Id")
@@ -301,6 +337,7 @@ namespace SportissimoProject.Migrations
             modelBuilder.Entity("SportissimoProject.Models.Client", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AdminId")
@@ -340,45 +377,10 @@ namespace SportissimoProject.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("SportissimoProject.Models.Reservation", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AdminId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("DateDebut")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateFin")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateReservation")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TerrainId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminId");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("TerrainId");
-
-                    b.ToTable("Reservations");
-                });
-
             modelBuilder.Entity("SportissimoProject.Models.Terrain", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Disponibilite")
@@ -451,6 +453,29 @@ namespace SportissimoProject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Reservation", b =>
+                {
+                    b.HasOne("SportissimoProject.Models.Admin", null)
+                        .WithMany("Reservations")
+                        .HasForeignKey("AdminId");
+
+                    b.HasOne("SportissimoProject.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SportissimoProject.Models.Terrain", "Terrain")
+                        .WithMany()
+                        .HasForeignKey("TerrainId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Terrain");
+                });
+
             modelBuilder.Entity("SportissimoProject.Models.Abonnement", b =>
                 {
                     b.HasOne("SportissimoProject.Models.Admin", null)
@@ -477,29 +502,6 @@ namespace SportissimoProject.Migrations
                         .HasForeignKey("CoachId");
                 });
 
-            modelBuilder.Entity("SportissimoProject.Models.Reservation", b =>
-                {
-                    b.HasOne("SportissimoProject.Models.Admin", null)
-                        .WithMany("Reservations")
-                        .HasForeignKey("AdminId");
-
-                    b.HasOne("SportissimoProject.Models.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SportissimoProject.Models.Terrain", "Terrain")
-                        .WithMany("Reservations")
-                        .HasForeignKey("TerrainId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("Terrain");
-                });
-
             modelBuilder.Entity("Coach", b =>
                 {
                     b.Navigation("Clients");
@@ -511,11 +513,6 @@ namespace SportissimoProject.Migrations
 
                     b.Navigation("Clients");
 
-                    b.Navigation("Reservations");
-                });
-
-            modelBuilder.Entity("SportissimoProject.Models.Terrain", b =>
-                {
                     b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618

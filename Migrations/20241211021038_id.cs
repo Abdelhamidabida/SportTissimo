@@ -5,7 +5,7 @@
 namespace SportissimoProject.Migrations
 {
     /// <inheritdoc />
-    public partial class s : Migration
+    public partial class id : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

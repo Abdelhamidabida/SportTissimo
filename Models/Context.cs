@@ -15,7 +15,7 @@ namespace SportissimoProject.Models
         public DbSet<Abonnement> Abonnements { get; set; }
         public DbSet<Terrain> Terrains { get; set; }
         public DbSet<Coach> Coaches { get; set; }
-
+       
         // Vous pouvez ajouter d'autres DbSet pour d'autres entités du projet
     }
 }
