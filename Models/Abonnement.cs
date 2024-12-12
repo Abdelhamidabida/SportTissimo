@@ -24,14 +24,11 @@ namespace SportissimoProject.Models
 
     public class Abonnement
     {
-        [Required]
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString(); // Id généré automatiquement
 
-        [Required]
-        public string ClientId { get; set; } // Identifiant du client (clé étrangère)
-        public Client Client { get; set; }
+        public string ClientId { get; set; } // Identifiant du client (clé étrangère), non requis
 
-       
+        public Client? Client { get; set; } // Relation avec Client, non requis
 
         [Required]
         public TypeAbonnement TypeGym { get; set; } // Type du gym (par exemple Salle de sport, CrossFit, etc.)
@@ -47,6 +44,4 @@ namespace SportissimoProject.Models
 
         public double Prix { get; set; } // Prix de l'abonnement
     }
-
-    
 }

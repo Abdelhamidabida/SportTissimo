@@ -17,6 +17,6 @@ namespace SportissimoProject.Models
 
         public Boolean Disponibilite { get; set; } // Disponibilité du terrain (ex : "Libre", "Occupé", etc.)
 
-         // Liste des réservations associées à ce terrain
+         
     }
 }

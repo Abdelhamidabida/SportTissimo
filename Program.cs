@@ -4,6 +4,11 @@ using SportissimoProject.Models;
 using SportissimoProject.Repositories.Interfaces;
 using SportissimoProject.Repositories;
 using SportissimoProject.Repository;
+using SportissimoProject.Commands;
+using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json.Serialization;
+using SportissimoProject.Services.Pricing;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +22,29 @@ var cnx = builder.Configuration.GetConnectionString("dbcon");
 builder.Services.AddDbContext<Context>(options => options.UseSqlServer(cnx));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ITerrainRepository, TerrainRepository>();
+
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IAbonnementRepository, AbonnementRepository>();
+
+builder.Services.AddScoped<ICreateReservationCommand, CreateReservationCommandHandler>();
+builder.Services.AddScoped<IUpdateReservationCommand, UpdateReservationCommandHandler>();
+builder.Services.AddScoped<IDeleteReservationCommand, DeleteReservationCommandHandler>();
+
+
+
+
+builder.Services.AddScoped<PricingStrategyFactory>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
+
+
+
+
 
 builder.Services.AddScoped<IClientRepo, ClientRepo>();
 var app = builder.Build();
