@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SportissimoProject.DTO;
 using SportissimoProject.Models;
 using SportissimoProject.Repositories.Interfaces;
@@ -13,8 +14,9 @@ public class TerrainController : ControllerBase
     {
         _terrainRepository = terrainRepository;
     }
-
+ 
     [HttpGet]
+
     public async Task<IActionResult> GetAll()
     {
         var terrains = await _terrainRepository.GetAllAsync();

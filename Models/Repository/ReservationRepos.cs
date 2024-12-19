@@ -16,7 +16,19 @@ namespace SportissimoProject.Repositories
         {
             _context = context;
         }
-
+        public async Task<bool> HasConflictAsync(string terrainId, DateTime dateDebut, DateTime dateFin)
+        {
+            return await _context.Reservations.AnyAsync(r =>
+                r.TerrainId == terrainId &&
+                r.DateDebut < dateFin &&
+                r.DateFin > dateDebut);
+        }
+        public async Task<List<Reservation>> GetReservationsByTerrainAndDateAsync(string terrainId, DateTime date)
+        {
+            return await _context.Reservations
+                .Where(r => r.TerrainId == terrainId && r.DateDebut.Date == date.Date)
+                .ToListAsync();
+        }
         public async Task<IEnumerable<Reservation>> GetAllAsync()
         {
             return await _context.Reservations

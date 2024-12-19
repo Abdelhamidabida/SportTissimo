@@ -8,4 +8,5 @@ namespace SportissimoProject.Commands
         Task<Reservation> ExecuteAsync(CreateReservationCommand command);
     }
 
+
 }

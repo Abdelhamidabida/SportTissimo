@@ -21,6 +21,27 @@ public class CreateReservationCommandHandler : ICreateReservationCommand
             throw new InvalidOperationException("Terrain non trouvé.");
         }
 
+        // Vérifier si la date est dans le passé
+        if (command.DateDebut < DateTime.Now)
+        {
+            throw new InvalidOperationException("Vous ne pouvez pas réserver une date passée.");
+        }
+
+        // Ajouter 1 heure à DateDebut
+        command.DateDebut = command.DateDebut.AddHours(1);
+        command.DateFin = command.DateFin.AddHours(1);
+        // Vérifier les conflits de réservation
+        var reservations = await _reservationRepository.GetReservationsByTerrainAndDateAsync(command.TerrainId, command.DateDebut.Date);
+
+        var hasConflict = reservations.Any(r =>
+            (command.DateDebut < r.DateFin && command.DateFin > r.DateDebut)
+        );
+
+        if (hasConflict)
+        {
+            throw new InvalidOperationException("Ce créneau est déjà réservé pour le terrain sélectionné.");
+        }
+
         // Créer la réservation
         var reservation = new Reservation
         {
@@ -35,12 +56,12 @@ public class CreateReservationCommandHandler : ICreateReservationCommand
         // Ajouter la réservation à la base de données
         await _reservationRepository.AddAsync(reservation);
 
-        
-        terrain.Disponibilite = false;
-
-        // Mettre à jour le terrain dans la base de données
-        await _terrainRepository.UpdateAsync(terrain);
+        // Journalisation (optionnelle)
+        Console.WriteLine($"Réservation créée pour le terrain {command.TerrainId} à {command.DateDebut}.");
 
         return reservation;
     }
+
+
+
 }

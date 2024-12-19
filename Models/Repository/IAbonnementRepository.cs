@@ -13,6 +13,7 @@ namespace SportissimoProject.Repositories.Interfaces
         Task DeleteAsync(string id);
         Task<List<Abonnement>> GetByClientIdAsync(string clientId);
         Task<List<Abonnement>> GetByTypeAsync(TypeAbonnement typeGym);
+
         
     }
 }

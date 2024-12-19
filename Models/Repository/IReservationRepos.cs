@@ -12,8 +12,13 @@ namespace SportissimoProject.Repositories.Interfaces
         Task AddAsync(Reservation reservation);       // Ajouter une nouvelle réservation
         Task UpdateAsync(Reservation reservation);    // Mettre à jour une réservation
         Task DeleteAsync(string id);                  // Supprimer une réservation
-
+        Task<List<Reservation>> GetReservationsByTerrainAndDateAsync(string terrainId, DateTime date);
         // Méthodes spécifiques pour les réservations
+        // Ajouter une méthode pour vérifier les conflits de réservation
+        Task<bool> HasConflictAsync(string terrainId, DateTime dateDebut, DateTime dateFin);
+
+        // Les autres méthodes de l'interface
+        
         Task<IEnumerable<Reservation>> GetReservationsByClientAsync(string clientId); // Par client
         Task<IEnumerable<Reservation>> GetReservationsByTerrainAsync(string terrainId); // Par terrain
         Task<IEnumerable<Reservation>> GetReservationsByDateRangeAsync(DateTime startDate, DateTime endDate); // Par date

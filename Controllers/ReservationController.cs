@@ -28,6 +28,99 @@ namespace SportissimoProject.Controllers
             _updateReservationCommand = updateReservationCommand;
             _deleteReservationCommand = deleteReservationCommand;
             _reservationRepository = reservationRepository;
+        
+        }
+
+        [HttpGet("CheckConflict")]
+        public async Task<IActionResult> CheckConflict([FromQuery] string terrainId, [FromQuery] DateTime dateDebut, [FromQuery] DateTime dateFin)
+        {
+            bool conflict = await _reservationRepository.HasConflictAsync(terrainId, dateDebut, dateFin);
+            return Ok(new { conflict });
+        }
+
+
+
+
+
+        [HttpGet("AvailableTimes")]
+        public async Task<IActionResult> GetAvailableTimes([FromQuery] string terrainId, [FromQuery] DateTime date)
+        {
+            if (string.IsNullOrWhiteSpace(terrainId))
+            {
+                return BadRequest("L'identifiant du terrain est invalide.");
+            }
+
+            try
+            {
+                // Récupérer les réservations existantes pour le terrain et la date donnée
+                var reservations = await _reservationRepository.GetReservationsByTerrainAndDateAsync(terrainId, date.Date);
+
+                var operatingHours = new List<TimeSpan>
+{
+    new TimeSpan(10, 0, 0),
+    new TimeSpan(12, 0, 0),
+    new TimeSpan(14, 0, 0),
+    new TimeSpan(16, 0, 0),
+    new TimeSpan(18, 0, 0),
+    new TimeSpan(20, 0, 0),
+    new TimeSpan(22, 0, 0)
+};
+
+
+                // Extraire les heures réservées (en les convertissant au format TimeSpan)
+                var reservedTimes = reservations.Select(r => r.DateDebut.TimeOfDay).ToHashSet();
+
+                // Filtrer les heures disponibles
+                var availableTimes = operatingHours.Where(t => !reservedTimes.Contains(t)).ToList();
+
+                // Retourner les heures disponibles
+                return Ok(availableTimes.Select(t => t.ToString(@"hh\:mm")));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpGet("GetAvailableHours")]
+        public async Task<IActionResult> GetAvailableHours([FromQuery] string terrainId, [FromQuery] DateTime date)
+        {
+            // Récupérer toutes les réservations pour ce terrain et cette date
+            var reservations = await _reservationRepository.GetReservationsByTerrainAndDateAsync(terrainId, date.Date);
+
+            // Générer toutes les plages horaires possibles (par exemple, de 8h à 22h, intervalle de 1h30)
+            var allSlots = new List<(TimeSpan start, TimeSpan end)>();
+            for (var time = new TimeSpan(8, 0, 0); time < new TimeSpan(22, 0, 0); time = time.Add(TimeSpan.FromMinutes(90)))
+            {
+                allSlots.Add((time, time.Add(TimeSpan.FromMinutes(90))));
+            }
+
+            // Filtrer les plages horaires déjà réservées
+            var availableSlots = allSlots.Where(slot =>
+                !reservations.Any(res =>
+                    res.DateDebut.TimeOfDay < slot.end && res.DateFin.TimeOfDay > slot.start))
+                .Select(slot => $"{slot.start:hh\\:mm} - {slot.end:hh\\:mm}")
+                .ToList();
+
+            return Ok(availableSlots);
         }
 
         // POST: api/reservation

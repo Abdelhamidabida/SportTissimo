@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SportissimoProject.Models
 {
-    public class Context : IdentityDbContext<ApplicationUser> // ApplicationUser représente la classe d'utilisateur de Identity
+    public class Context : IdentityDbContext<Client> // ApplicationUser représente la classe d'utilisateur de Identity
     {
         public Context(DbContextOptions<Context> options) : base(options) { }
 
@@ -14,8 +14,11 @@ namespace SportissimoProject.Models
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Abonnement> Abonnements { get; set; }
         public DbSet<Terrain> Terrains { get; set; }
-        public DbSet<Coach> Coaches { get; set; }
        
+
         // Vous pouvez ajouter d'autres DbSet pour d'autres entités du projet
+
+
+      
     }
 }
